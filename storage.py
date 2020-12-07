@@ -57,7 +57,8 @@ class SimpleStorage:
             except:
                 print("Deserialization error")
                 return None
-
+    def reduce_to_webpages(self):
+        return List[map(lambda x: x["webpage"],self.state_store)]
     def serialize(self):
         file_to_write = open(self.save_path, "w")
         file_to_write.write(json.dumps(self.state_store))
