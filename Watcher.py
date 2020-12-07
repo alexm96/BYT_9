@@ -12,6 +12,7 @@ class Watcher(object):
     def __init__(self):
         self.storage = storage.SimpleStorage()
         self.urls_to_watch = {}
+        self.observers=[]
 
     def attach(self, observer: _observer):
         self.observers.append(observer)
@@ -24,7 +25,8 @@ class Watcher(object):
 
     def add_webpage(self, webpage_to_add: str):
         if webpage_to_add not in self.urls_to_watch:
-            self.urls_to_watch[webpage_to_add]: ""
+            self.urls_to_watch[webpage_to_add]=""
+            1+1
         else:
             print("webpage already being watched")
 

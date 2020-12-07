@@ -2,7 +2,7 @@ from typing import List
 import requests as _requests
 import storage
 import util.util as _util
-import Watcher
+
 
 
 class Observer(object):
@@ -13,7 +13,7 @@ class Observer(object):
 
 
 class ConcreteObserver(Observer):
-    def __init__(self, webpage: str, subject: Watcher.Watcher):
+    def __init__(self, webpage: str,subject):
         self.webpage = webpage
         self.subject = subject
         self.subject.attach(self)
