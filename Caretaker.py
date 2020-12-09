@@ -17,7 +17,7 @@ class Memento(object):
 
     def to_json(self):
         observers = [ob.to_json() for ob in self.observers]
-        return json.dumps(observers), json.dumps(self.urls_to_watch)
+        return observers, self.urls_to_watch
 
 
 class Caretaker(object):
@@ -39,29 +39,31 @@ class Caretaker(object):
                 "observers": item1
             })
         to_write.write(json.dumps(to_return))
+    @staticmethod
+    def deserialize(save_path:str):
+        file_to_load=open(save_path)
+        theoretical_list=json.load(file_to_load)
+        for item in theoretical_list:
+            for inner_item in item.get("observers"):
+                print(inner_item)
 
     def add_memento(self, memento_to_add: Memento):
-        print(memento_to_add)
         self.saved_mementos.append(memento_to_add)
 
 
-    def get_memento(self, index: int):
-        return self.saved_mementos[index]
+    def get_memento(self):
+        return self.saved_mementos.pop()
 
 
 if __name__ == '__main__':
+
     s = Watcher.Watcher()
     o = ObserverDP.ConcreteObserver(webpage="http://www.pja.edu.pl/", subject=s)
-    o2 = ObserverDP.ConcreteObserver(webpage="http://www.pja.edu.pl/", subject=s)
-    o3 = ObserverDP.ConcreteObserver(webpage="https://www.pja.edu.pl/informatyka/inzynierskie/informacje-ogolne/",
-                                     subject=s)
+    o2 = ObserverDP.ConcreteObserver(webpage="https://www.olx.pl/", subject=s)
     s.check_pages()
     c = Caretaker("./sample_db.json")
     m = Memento(urls_to_watch=s.urls_to_watch, observers=s.observers)
     c.add_memento(m)
-    s.check_pages()
-    m2 = Memento(urls_to_watch=s.urls_to_watch, observers=s.observers)
-
-    c.add_memento(m2)
-
     print(c.serialize())
+
+    Caretaker.deserialize("./sample_db.json")
