@@ -1,3 +1,5 @@
+import threading
+import time
 from typing import List
 import requests as _requests
 
@@ -6,18 +8,22 @@ import ObserverDP as _observer
 import Caretaker
 
 
-class Watcher(object):
+class Watcher(threading.Thread):
     # Originator for memento + watcher for Observer
     urls_to_watch: {}
     observers: List[_observer.Observer]
 
     def __init__(self):
+        super().__init__()
         self.urls_to_watch = {}
         self.observers = []
+        self.interrupt = False
 
     def restore(self, memento: Caretaker.Memento):
         self.urls_to_watch = memento.urls_to_watch
-        self.observers = memento.observers
+
+        for observer in memento.observers:
+            self.attach(observer)
 
     def attach(self, observer: _observer):
         self.observers.append(observer)
@@ -31,16 +37,21 @@ class Watcher(object):
     def add_webpage(self, webpage_to_add: str):
         if webpage_to_add not in self.urls_to_watch:
             self.urls_to_watch[webpage_to_add] = ""
-
         else:
             print("webpage already being watched")
 
+    def run(self):
+        while not self.interrupt:
+            self.check_pages()
+            time.sleep(60)
+
     def webpage_differs(self, webpage: str, update_time: str) -> bool:
         return self.urls_to_watch.get(webpage) != update_time
+
     def check_pages(self):
         for webpage in self.urls_to_watch:
             response = _requests.get(url=webpage)
             new_time = _util.get_last_modified(some_response=response)
             if self.webpage_differs(webpage, new_time):
-                self.urls_to_watch[webpage]=new_time
+                self.urls_to_watch[webpage] = new_time
                 self.notify_for_webpage(webpage=webpage, update_time=new_time)
