@@ -39,5 +39,5 @@ class ConcreteObserver(Observer):
         )
 
     def to_json(self):
-        print(ConcreteObserver.json_key)
+
         return {"{}".format(ConcreteObserver.json_key): self.webpage}

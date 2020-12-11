@@ -9,7 +9,7 @@ import Caretaker
 from Caretaker import Memento
 
 
-class Watcher(threading.Thread):
+class Watcher():
     # Originator for memento + watcher for Observer
     urls_to_watch: {}
     observers: List[_observer.Observer]
@@ -21,6 +21,7 @@ class Watcher(threading.Thread):
         self.interrupt = False
 
     def generate_memento(self):
+
         return Memento(
             urls_to_watch=copy.deepcopy(self.urls_to_watch),
             observers=copy.deepcopy(self.observers),
@@ -45,12 +46,7 @@ class Watcher(threading.Thread):
         if webpage_to_add not in self.urls_to_watch:
             self.urls_to_watch[webpage_to_add] = ""
         else:
-            print("webpage already being watched")
-
-    def run(self):
-        while not self.interrupt:
-            self.check_pages()
-            time.sleep(60)
+            print("{webpage} is already being watched, was not added".format(webpage=webpage_to_add))
 
     def webpage_differs(self, webpage: str, update_time: str) -> bool:
         return self.urls_to_watch.get(webpage) != update_time

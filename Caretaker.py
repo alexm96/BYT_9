@@ -19,7 +19,7 @@ class Memento(object):
 
     def to_json(self):
         observers = [ob.to_json() for ob in self.observers]
-        print(observers)
+
         return observers, self.urls_to_watch
 
 
@@ -38,6 +38,7 @@ class Caretaker(object):
         self.watcher = watcher
 
     def serialize(self):  # memento -> file
+
         to_write = open(self.save_path, "w")
         to_return = []
         for item in self.saved_mementos:
@@ -84,25 +85,29 @@ class Caretaker(object):
     def add_memento(self, memento_to_add: Memento):
         self.saved_mementos.append(memento_to_add)
 
-    def get_memento(self):
-        return self.saved_mementos[len(self.saved_mementos) - 1]
+    def get_memento(self,index=-1):
+        if(index==-1):
+            index=len(self.saved_mementos)-1
+        return self.saved_mementos[index]
 
 
 if __name__ == "__main__":
-    """
+    '''
     s = Watcher.Watcher()
     o = ObserverDP.ConcreteObserver(webpage="http://www.pja.edu.pl/", subject=s)
+    o1 = ObserverDP.ConcreteObserver(webpage="http://www.pja.edu.pl/", subject=s)
     o2 = ObserverDP.ConcreteObserver(webpage="https://www.olx.pl/", subject=s)
     s.check_pages()
     c = Caretaker("./sample_db.json")
     m=s.generate_memento()
     c.add_memento(m)
+    print(c.saved_mementos)
     print(c.serialize())
-    """
+    '''
     w = Watcher.Watcher()
     c = Caretaker.deserialize(save_path="./sample_db.json")
-    c.set_watcher(w)
-    w.restore(c.get_memento())
+    c.set_watcher(w) # can't deserialize specific watcher, rather have to create new one then restore from memento
+    w.restore(c.get_memento()) # Restoring from most recent state
     w.check_pages()
-
+    c.add_memento(w.generate_memento())
     c.serialize()
