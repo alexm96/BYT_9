@@ -2,10 +2,11 @@ import threading
 import time
 from typing import List
 import requests as _requests
-
+import copy
 import util.util as _util
 import ObserverDP as _observer
 import Caretaker
+from Caretaker import Memento
 
 
 class Watcher(threading.Thread):
@@ -19,8 +20,14 @@ class Watcher(threading.Thread):
         self.observers = []
         self.interrupt = False
 
+    def generate_memento(self):
+        return Memento(
+            urls_to_watch=copy.deepcopy(self.urls_to_watch),
+            observers=copy.deepcopy(self.observers),
+        )
+
     def restore(self, memento: Caretaker.Memento):
-        self.urls_to_watch = memento.urls_to_watch
+        self.urls_to_watch = copy.deepcopy(memento.urls_to_watch)
 
         for observer in memento.observers:
             self.attach(observer)
