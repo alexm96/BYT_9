@@ -18,7 +18,7 @@ class Watcher():
         super().__init__()
         self.urls_to_watch = {}
         self.observers = []
-        self.interrupt = False
+
 
     def generate_memento(self):
 

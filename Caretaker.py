@@ -54,6 +54,7 @@ class Caretaker(object):
                 }
             )
         json.dump(to_return, fp=to_write)
+        to_write.close()
 
     @staticmethod
     def deserialize(save_path: str):
@@ -80,6 +81,7 @@ class Caretaker(object):
                 urls_to_watch=list_of_webpages, observers=list_of_observers
             )
             memento_list.append(memento_to_add)
+        file_to_load.close()
         return Caretaker(save_path=save_path, watcher=None, saved_mementos=memento_list)
 
     def add_memento(self, memento_to_add: Memento):
