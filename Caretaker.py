@@ -94,7 +94,7 @@ class Caretaker(object):
 
 
 if __name__ == "__main__":
-    '''
+
     s = Watcher.Watcher()
     o = ObserverDP.ConcreteObserver(webpage="http://www.pja.edu.pl/", subject=s)
     o1 = ObserverDP.ConcreteObserver(webpage="http://www.pja.edu.pl/", subject=s)
@@ -105,7 +105,7 @@ if __name__ == "__main__":
     c.add_memento(m)
     print(c.saved_mementos)
     print(c.serialize())
-    '''
+
     w = Watcher.Watcher()
     c = Caretaker.deserialize(save_path="./sample_db.json")
     c.set_watcher(w) # can't deserialize specific watcher, rather have to create new one then restore from memento

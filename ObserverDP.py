@@ -29,7 +29,7 @@ class ConcreteObserver(Observer):
             self.subject.attach(
                 self
             )  # if none, means deserialization and being restored through memento?
-        self.json_key = "webpage"
+
 
     def update(self, new_time: str):
         print(
